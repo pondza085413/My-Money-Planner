@@ -351,3 +351,15 @@ label input{
   line-height:1.7;
   font-weight:600;
 }
+.text-link{
+  display:block;
+  text-align:center;
+  margin-top:16px;
+  color:#2563eb;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.text-link:hover{
+  text-decoration:underline;
+}
