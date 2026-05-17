@@ -1,10 +1,3 @@
-const SUPABASE_URL = "https://vhsuviklxwnwykdvlxye.supabase.co/rest/v1/";
-const SUPABASE_ANON_KEY = "sb_publishable_nXhFmA58ykc3U9kuwOqq4w_ruf99dAh";
-
-const supabaseClient = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
 const state = {
   salary: 30000,
   fixed: 9000,
