@@ -286,3 +286,20 @@ label input{
 .orange{
   background:linear-gradient(135deg,#f59e0b,#fbbf24);
 }
+/* ===== DEBT PROGRESS BAR ===== */
+
+.progress-wrap{
+  width:100%;
+  height:18px;
+  background:#e5e7eb;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:18px;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#22c55e,#4ade80);
+  transition:.4s;
+}
