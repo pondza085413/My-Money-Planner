@@ -9,16 +9,7 @@ if (input !== adminPassword) {
 
 const list = document.getElementById("requestsList");
 
-function escapeText(value) {
-  return String(value || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-async function loadStats(){
+async function loadStats() {
   const { count: users } = await supabaseClient
     .from("payment_requests")
     .select("*", { count: "exact", head: true })
@@ -39,7 +30,7 @@ async function loadStats(){
   document.getElementById("approvedCount").textContent = approved || 0;
 }
 
-async function loadRequests(){
+async function loadRequests() {
   list.innerHTML = "กำลังโหลด...";
 
   const { data, error } = await supabaseClient
@@ -47,15 +38,12 @@ async function loadRequests(){
     .select("*")
     .order("created_at", { ascending: false });
 
-  console.log("payment_requests data:", data);
-  console.log("payment_requests error:", error);
-
-  if(error){
+  if (error) {
     list.innerHTML = `<div class="status-box error">โหลดข้อมูลไม่สำเร็จ: ${error.message}</div>`;
     return;
   }
 
-  if(!data || data.length === 0){
+  if (!data || data.length === 0) {
     list.innerHTML = `<div class="empty">ยังไม่มีรายการชำระเงิน</div>`;
     return;
   }
@@ -66,7 +54,7 @@ async function loadRequests(){
         <h3>${item.customer_name || "-"}</h3>
         <p>LINE ID: <b>${item.line_id || "-"}</b></p>
         <p>ยอด: <b>${Number(item.amount || 0).toLocaleString("th-TH")} บาท</b></p>
-        <p>สถานะ: <span class="pill ${item.status}">${item.status || "-"}</span></p>
+        <p>สถานะ: <span class="pill ${item.status || ""}">${item.status || "-"}</span></p>
         <p>Remark: <b>${item.remark || "-"}</b></p>
         <p class="small">${item.created_at ? new Date(item.created_at).toLocaleString("th-TH") : ""}</p>
       </div>
@@ -84,7 +72,7 @@ async function loadRequests(){
         ` : ""}
 
         ${item.status === "approved" ? `
-          <button class="danger-btn" onclick="deleteRequest('${item.id}')">ปิดสิทธิ์</button>
+          <button class="danger-btn" onclick="disableUser('${item.id}')">ปิดสิทธิ์</button>
         ` : ""}
       </div>
     </article>
@@ -120,18 +108,7 @@ async function rejectPayment(id) {
 }
 
 async function editRemark(id) {
-  const { data, error: loadError } = await supabaseClient
-    .from("payment_requests")
-    .select("remark")
-    .eq("id", id)
-    .single();
-
-  if (loadError) {
-    alert("โหลด remark ไม่สำเร็จ: " + loadError.message);
-    return;
-  }
-
-  const remark = prompt("ใส่หมายเหตุ / Remark", data?.remark || "");
+  const remark = prompt("ใส่หมายเหตุ / Remark");
 
   if (remark === null) return;
 
@@ -141,17 +118,17 @@ async function editRemark(id) {
     .eq("id", id);
 
   if (error) {
-    alert("บันทึก remark ไม่สำเร็จ: " + error.message);
+    alert("บันทึก Remark ไม่สำเร็จ: " + error.message);
     return;
   }
 
   await refreshAll();
 }
 
-async function deleteRequest(id) {
-  const confirmDelete = confirm("ยืนยันปิดสิทธิ์ผู้ใช้งานนี้? ข้อมูลจะยังอยู่ในหน้าแอดมิน");
+async function disableUser(id) {
+  const confirmDisable = confirm("ยืนยันปิดสิทธิ์ผู้ใช้งานนี้? ข้อมูลจะยังอยู่ในหน้าแอดมิน");
 
-  if (!confirmDelete) return;
+  if (!confirmDisable) return;
 
   const { data: request, error: loadError } = await supabaseClient
     .from("payment_requests")
@@ -185,11 +162,18 @@ async function deleteRequest(id) {
     .eq("id", id);
 
   if (error) {
-    alert("เปลี่ยนสถานะรายการไม่สำเร็จ: " + error.message);
+    alert("เปลี่ยนสถานะไม่สำเร็จ: " + error.message);
     return;
   }
 
-  alert("ปิดสิทธิ์ผู้ใช้งานแล้ว แต่ข้อมูลยังอยู่ในแอดมิน");
-
+  alert("ปิดสิทธิ์แล้ว แต่ข้อมูลยังอยู่ในแอดมิน");
   await refreshAll();
 }
+
+async function refreshAll() {
+  await loadStats();
+  await loadRequests();
+}
+
+document.getElementById("refreshBtn").addEventListener("click", refreshAll);
+refreshAll();
