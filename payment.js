@@ -48,6 +48,10 @@ function listenForApproval(requestId){
         if(payload.new.status === "rejected"){
           showStatus("สลิปนี้ไม่ผ่านการตรวจสอบ กรุณาติดต่อแอดมินทาง LINE", "error");
         }
+
+        if(payload.new.status === "disabled"){
+          showStatus("รายการนี้ถูกปิดสิทธิ์ กรุณาติดต่อแอดมิน", "error");
+        }
       }
     )
     .subscribe();
@@ -73,6 +77,12 @@ form.addEventListener("submit", async (e) => {
     const requestId = crypto.randomUUID();
     const setupToken = crypto.randomUUID();
 
+    showStatus("กำลังอัปโหลดสลิป...", "info");
+
+    const slipUrl = await uploadSlip(slipFile, requestId);
+
+    showStatus("กำลังบันทึกคำร้อง...", "info");
+
     const { error: insertError } = await supabaseClient
       .from("payment_requests")
       .insert({
@@ -80,20 +90,12 @@ form.addEventListener("submit", async (e) => {
         customer_name: customerName,
         line_id: lineId,
         amount: APP_PRICE,
+        slip_url: slipUrl,
         status: "pending",
         setup_token: setupToken
       });
 
     if(insertError) throw insertError;
-
-    const slipUrl = await uploadSlip(slipFile, requestId);
-
-    const { error: updateError } = await supabaseClient
-      .from("payment_requests")
-      .update({ slip_url: slipUrl })
-      .eq("id", requestId);
-
-    if(updateError) throw updateError;
 
     localStorage.setItem("mmp_pending_request_id", requestId);
     listenForApproval(requestId);
@@ -101,9 +103,9 @@ form.addEventListener("submit", async (e) => {
     console.error(error);
     showStatus(`
       ส่งข้อมูลไม่สำเร็จ<br>
-      ตรวจสอบว่า Supabase มี Storage bucket ชื่อ <b>payment-slips</b> และเปิด Public แล้ว<br>
       รายละเอียด: ${error.message || error}
     `, "error");
+
     submitBtn.disabled = false;
     submitBtn.textContent = "ส่งสลิปและรออนุมัติ";
   }
