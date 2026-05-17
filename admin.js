@@ -173,7 +173,7 @@ async function editRemark(id) {
 }
 
 async function deleteRequest(id) {
-  const confirmDelete = confirm("ยืนยันลบรายการนี้และปิดสิทธิ์ผู้ใช้งาน?");
+  const confirmDelete = confirm("ยืนยันปิดสิทธิ์ผู้ใช้งานนี้? ข้อมูลจะยังอยู่ในหน้าแอดมิน");
 
   if (!confirmDelete) return;
 
@@ -191,26 +191,29 @@ async function deleteRequest(id) {
   if (request?.user_id) {
     const { error: userError } = await supabaseClient
       .from("users")
-      .delete()
+      .update({
+        is_active: false,
+        device_id: null
+      })
       .eq("id", request.user_id);
 
     if (userError) {
-      alert("ลบ user ไม่สำเร็จ: " + userError.message);
+      alert("ปิดสิทธิ์ user ไม่สำเร็จ: " + userError.message);
       return;
     }
   }
 
   const { error } = await supabaseClient
     .from("payment_requests")
-    .delete()
+    .update({ status: "disabled" })
     .eq("id", id);
 
   if (error) {
-    alert("ลบรายการไม่สำเร็จ: " + error.message);
+    alert("เปลี่ยนสถานะรายการไม่สำเร็จ: " + error.message);
     return;
   }
 
-  alert("ลบรายการและปิดสิทธิ์ผู้ใช้งานแล้ว");
+  alert("ปิดสิทธิ์ผู้ใช้งานแล้ว แต่ข้อมูลยังอยู่ในแอดมิน");
 
   await refreshAll();
 }
