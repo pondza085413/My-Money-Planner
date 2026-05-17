@@ -1,3 +1,16 @@
+let currentLang = localStorage.getItem("mmp_lang") || "th";
+
+const translations = {
+  th: {
+    title: "วางแผนเงิน ใช้หนี้ เก็บเงิน และคุมงบรายวัน",
+    subtitle: "กรอกเงินเดือนและรายจ่าย แล้วระบบจะช่วยคำนวณเงินเหลือ โควต้ารายวัน เป้าหมายเก็บเงิน และแผนปลดหนี้"
+  },
+  en: {
+    title: "Plan Your Money, Pay Debt, Save More",
+    subtitle: "Enter your income and expenses to calculate balance, daily quota, savings goals, and debt payoff plans."
+  }
+};
+
 function updateLanguage(){
   const langData = translations[currentLang];
 
