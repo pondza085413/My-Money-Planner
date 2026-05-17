@@ -336,3 +336,18 @@ label input{
   }
 
 }
+/* ===== AI FINANCIAL COACH ===== */
+
+.ai-coach{
+  margin-top:24px;
+}
+
+.ai-item{
+  padding:16px;
+  border-radius:18px;
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+  margin-bottom:12px;
+  line-height:1.7;
+  font-weight:600;
+}
