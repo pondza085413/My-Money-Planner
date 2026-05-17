@@ -43,9 +43,9 @@ async function loadRequests() {
   list.innerHTML = "กำลังโหลด...";
 
   const { data, error } = await supabaseClient
-    .from("payment_requests")
-    .select("*")
-    .order("created_at", { ascending: false });
+  .from("payment_requests")
+  .select("*")
+  .order("created_at", { ascending: false });
 
   if (error) {
     list.innerHTML = `<div class="status-box error">โหลดข้อมูลไม่สำเร็จ: ${escapeText(error.message)}</div>`;
@@ -92,14 +92,10 @@ async function loadRequests() {
             <button class="danger-btn" onclick="deleteRequest('${item.id}')">
                ลบ
               </button>
-            ${
-              item.status === "pending"
-                ? `
-                  <button class="primary-btn" onclick="approvePayment('${item.id}')">อนุมัติ</button>
-                  <button class="danger-btn" onclick="rejectPayment('${item.id}')">ไม่อนุมัติ</button>
-                `
-                : ""
-            }
+           ${item.status === "pending" ? `
+  <button class="primary-btn" onclick="approvePayment('${item.id}')">อนุมัติ</button>
+  <button class="danger-btn" onclick="rejectPayment('${item.id}')">ไม่อนุมัติ</button>
+` : ""}
 
             ${
               item.status === "approved"
