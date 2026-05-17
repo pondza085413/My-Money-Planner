@@ -208,9 +208,10 @@ async function deleteRequest(id) {
     return;
   }
 
+  alert("ลบรายการและปิดสิทธิ์ผู้ใช้งานแล้ว");
+
   await refreshAll();
 }
-
 async function refreshAll() {
   await loadStats();
   await loadRequests();
