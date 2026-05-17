@@ -303,3 +303,36 @@ label input{
   background:linear-gradient(90deg,#22c55e,#4ade80);
   transition:.4s;
 }
+/* ===== MOBILE UX ===== */
+
+@media(max-width:768px){
+
+  .hero{
+    grid-template-columns:1fr;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .tabs{
+    overflow:auto;
+    white-space:nowrap;
+    padding-bottom:8px;
+  }
+
+  .tab{
+    min-width:max-content;
+  }
+
+  input{
+    font-size:16px;
+  }
+
+  .primary-btn,
+  .secondary-btn,
+  .ghost-btn{
+    width:100%;
+  }
+
+}
