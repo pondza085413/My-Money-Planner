@@ -117,6 +117,7 @@ function updateTopSummary(){
   if(dashboardUsage){
     const usageRate = state.salary > 0 ? (totalExpense / state.salary) * 100 : 0;
     dashboardUsage.textContent = `${Math.min(usageRate, 999).toFixed(0)}%`;
+     updateMoneyStatus(monthlyLeft);
   }
 }
 function updateMoneyStatus(monthlyLeft){
