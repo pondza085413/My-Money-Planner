@@ -1,15 +1,24 @@
-let currentLang = localStorage.getItem("mmp_lang") || "th";
+function updateLanguage(){
+  const langData = translations[currentLang];
 
-const translations = {
-  th: {
-    title: "วางแผนเงิน ใช้หนี้ เก็บเงิน และคุมงบรายวัน",
-    subtitle: "กรอกเงินเดือนและรายจ่าย แล้วระบบจะช่วยคำนวณเงินเหลือ โควต้ารายวัน เป้าหมายเก็บเงิน และแผนปลดหนี้"
-  },
-  en: {
-    title: "Plan Your Money, Pay Debt, Save More",
-    subtitle: "Enter your income and expenses to calculate balance, daily quota, savings goals, and debt payoff plans."
-  }
-};
+  document.querySelector("h1").textContent = langData.title;
+  document.querySelector(".hero-text").textContent = langData.subtitle;
+
+  localStorage.setItem("mmp_lang", currentLang);
+}
+
+function setupLanguageToggle(){
+  const btn = document.getElementById("langToggle");
+
+  if(!btn) return;
+
+  btn.addEventListener("click", () => {
+    currentLang = currentLang === "th" ? "en" : "th";
+    updateLanguage();
+  });
+
+  updateLanguage();
+}
 const state = {
   salary: 30000,
   fixed: 9000,
