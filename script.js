@@ -119,6 +119,37 @@ function updateTopSummary(){
     dashboardUsage.textContent = `${Math.min(usageRate, 999).toFixed(0)}%`;
   }
 }
+function updateMoneyStatus(monthlyLeft){
+  const icon = document.getElementById("moneyStatusIcon");
+  const title = document.getElementById("moneyStatusTitle");
+  const text = document.getElementById("moneyStatusText");
+
+  if(!icon || !title || !text) return;
+
+  if(monthlyLeft < 0){
+    icon.textContent = "😰";
+    title.textContent = "สถานะการเงินน่าเป็นห่วง";
+    text.textContent = "รายจ่ายมากกว่ารายรับ ควรลดค่าใช้จ่ายด่วน";
+  }
+
+  else if(monthlyLeft < 5000){
+    icon.textContent = "😐";
+    title.textContent = "สถานะการเงินเริ่มตึง";
+    text.textContent = "ยังพอหมุนได้ แต่ควรวางแผนเพิ่ม";
+  }
+
+  else if(monthlyLeft < 15000){
+    icon.textContent = "🙂";
+    title.textContent = "สถานะการเงินดี";
+    text.textContent = "คุณยังมีเงินเหลือสำหรับวางแผนต่อ";
+  }
+
+  else{
+    icon.textContent = "😎";
+    title.textContent = "สถานะการเงินแข็งแรงมาก";
+    text.textContent = "คุณมีศักยภาพเก็บเงินและลงทุนได้ดี";
+  }
+}
 
 function calculateDebt(){
   const debt = num("debtTotal");
