@@ -1,3 +1,10 @@
+const SUPABASE_URL = "API URL";
+const SUPABASE_ANON_KEY = "Publishable key";
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 const state = {
   salary: 30000,
   fixed: 9000,
