@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ตั้งรหัสผ่าน | My Money Planner</title>
+  <link rel="stylesheet" href="auth.css" />
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-card">
+      <div class="badge">Setup Password</div>
+      <h1>ตั้งรหัสผ่านเข้าใช้งาน</h1>
+      <p class="lead">รหัสผ่านนี้จะใช้สำหรับเข้าโปรแกรมครั้งต่อไป</p>
+
+      <form id="setupForm" class="form">
+        <label>ตั้งรหัสผ่าน
+          <input type="password" id="password" minlength="4" placeholder="อย่างน้อย 4 ตัว" required>
+        </label>
+        <label>ยืนยันรหัสผ่าน
+          <input type="password" id="confirmPassword" minlength="4" required>
+        </label>
+        <button type="submit" class="primary-btn">บันทึกรหัสผ่าน</button>
+      </form>
+
+      <div id="setupStatus" class="status-box hidden"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="setup.js"></script>
+</body>
+</html>

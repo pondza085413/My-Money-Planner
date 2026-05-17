@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ชำระเงิน | My Money Planner</title>
+  <link rel="stylesheet" href="auth.css" />
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-card wide">
+      <div class="badge">ใช้งานถาวร 99 บาท</div>
+      <h1>เริ่มใช้งาน My Money Planner</h1>
+      <p class="lead">ชำระเงินผ่าน QR Code แล้วอัปโหลดสลิป จากนั้นรออนุมัติ ระบบจะพาไปตั้งรหัสผ่านอัตโนมัติ</p>
+
+      <div class="payment-grid">
+        <div class="qr-box">
+          <img src="qr-payment.png" alt="QR Code ชำระเงิน">
+          <p>สแกนจ่าย <strong>99 บาท</strong></p>
+        </div>
+
+        <form id="paymentForm" class="form">
+          <label>ชื่อที่โอน
+            <input type="text" id="customerName" placeholder="เช่น ปณิธาน" required>
+          </label>
+
+          <label>LINE ID
+            <input type="text" id="lineId" placeholder="เช่น @lineid หรือ lineid" required>
+          </label>
+
+          <label>อัปโหลดสลิป
+            <input type="file" id="slipFile" accept="image/*" required>
+          </label>
+
+          <button type="submit" class="primary-btn">ส่งสลิปและรออนุมัติ</button>
+        </form>
+      </div>
+
+      <div id="statusBox" class="status-box hidden"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="payment.js"></script>
+</body>
+</html>

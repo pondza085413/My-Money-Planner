@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>เข้าสู่ระบบ | My Money Planner</title>
+  <link rel="stylesheet" href="auth.css" />
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-card">
+      <div class="badge">Login</div>
+      <h1>เข้าสู่ระบบ</h1>
+      <p class="lead">กรอกรหัสผ่านที่คุณตั้งไว้เพื่อเข้าใช้งานโปรแกรม</p>
+
+      <form id="loginForm" class="form">
+        <label>รหัสผ่าน
+          <input type="password" id="password" required>
+        </label>
+        <button type="submit" class="primary-btn">เข้าใช้งาน</button>
+      </form>
+
+      <div id="loginStatus" class="status-box hidden"></div>
+      <a class="text-link" href="payment.html">ยังไม่ได้ซื้อใช้งาน? ไปหน้าชำระเงิน</a>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>

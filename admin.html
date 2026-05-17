@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin | My Money Planner</title>
+  <link rel="stylesheet" href="auth.css" />
+</head>
+<body>
+  <main class="admin-page">
+    <section class="admin-header">
+      <div>
+        <p class="badge">Admin Dashboard</p>
+        <h1>ตรวจสลิปและอนุมัติลูกค้า</h1>
+        <p>ราคาโปรแกรม 99 บาท ใช้งานถาวร</p>
+      </div>
+      <button id="refreshBtn" class="secondary-btn">รีเฟรช</button>
+    </section>
+
+    <section class="stats-grid">
+      <div class="stat"><span>ผู้ใช้ทั้งหมด</span><strong id="totalUsers">0</strong></div>
+      <div class="stat"><span>รออนุมัติ</span><strong id="pendingCount">0</strong></div>
+      <div class="stat"><span>อนุมัติแล้ว</span><strong id="approvedCount">0</strong></div>
+    </section>
+
+    <section class="admin-card">
+      <h2>รายการชำระเงิน</h2>
+      <div id="requestsList" class="requests-list"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
