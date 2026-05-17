@@ -21,24 +21,24 @@
         <small id="dailyQuotaTop">โควต้าต่อวัน ฿0</small>
       </div>
     </header>
-<section class="premium-dashboard">
 
-  <div class="premium-card green">
-    <span>เงินเหลือเดือนนี้</span>
-    <strong id="dashboardLeftMoney">฿0</strong>
-  </div>
+    <section class="premium-dashboard">
+      <div class="premium-card green">
+        <span>เงินเหลือเดือนนี้</span>
+        <strong id="dashboardLeftMoney">฿0</strong>
+      </div>
 
-  <div class="premium-card blue">
-    <span>ใช้ได้ต่อวัน</span>
-    <strong id="dashboardDaily">฿0</strong>
-  </div>
+      <div class="premium-card blue">
+        <span>ใช้ได้ต่อวัน</span>
+        <strong id="dashboardDaily">฿0</strong>
+      </div>
 
-  <div class="premium-card orange">
-    <span>อัตราการใช้เงิน</span>
-    <strong id="dashboardUsage">0%</strong>
-  </div>
+      <div class="premium-card orange">
+        <span>อัตราการใช้เงิน</span>
+        <strong id="dashboardUsage">0%</strong>
+      </div>
+    </section>
 
-</section>
     <main class="grid">
       <section class="card setup-card">
         <div class="card-title">
@@ -85,7 +85,12 @@
             <label>จ่ายเดือนละ <input type="number" id="debtPay" value="5000"></label>
             <label>อยากจบภายในกี่ปี <input type="number" id="debtTargetYears" value="2"></label>
           </div>
+
           <div class="result-box" id="debtResult"></div>
+
+          <div class="progress-wrap">
+            <div class="progress-bar" id="debtProgressBar"></div>
+          </div>
         </section>
 
         <section id="saving" class="panel">
@@ -134,11 +139,16 @@
       <h2>คำแนะนำวันนี้</h2>
       <div id="adviceList" class="advice-list"></div>
     </section>
+
+    <section class="card ai-coach">
+      <h2>AI Financial Coach</h2>
+      <div id="aiAdvice"></div>
+    </section>
   </div>
 
-   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script src="app-auth.js"></script>
-<script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="app-auth.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
