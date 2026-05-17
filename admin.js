@@ -18,10 +18,11 @@ function escapeText(value) {
     .replaceAll("'", "&#039;");
 }
 
-async function loadStats() {
+async function loadStats(){
   const { count: users } = await supabaseClient
-    .from("users")
-    .select("*", { count: "exact", head: true });
+    .from("payment_requests")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "approved");
 
   const { count: pending } = await supabaseClient
     .from("payment_requests")
