@@ -1,12 +1,28 @@
-// ใส่ไฟล์นี้ก่อน script.js ใน index.html
-// ใช้ตรวจว่า login แล้วหรือยัง และช่วยบันทึก/โหลดข้อมูลของลูกค้าจาก Supabase
-
 const CURRENT_USER_ID = localStorage.getItem("mmp_user_id");
 const IS_LOGGED_IN = localStorage.getItem("mmp_logged_in") === "true";
 
-if(!IS_LOGGED_IN || !CURRENT_USER_ID){
-  window.location.href = "payment.html";
+async function checkUserStillActive(){
+  if(!IS_LOGGED_IN || !CURRENT_USER_ID){
+    window.location.href = "payment.html";
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("users")
+    .select("id,is_active")
+    .eq("id", CURRENT_USER_ID)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if(error || !data){
+    localStorage.removeItem("mmp_logged_in");
+    localStorage.removeItem("mmp_user_id");
+    alert("บัญชีนี้ถูกปิดใช้งานหรือถูกลบแล้ว");
+    window.location.href = "login.html";
+  }
 }
+
+checkUserStillActive();
 
 async function saveFinanceData(dataJson){
   if(!CURRENT_USER_ID) return;
