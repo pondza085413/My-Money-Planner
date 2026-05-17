@@ -214,10 +214,3 @@ async function deleteRequest(id) {
 
   await refreshAll();
 }
-async function refreshAll() {
-  await loadStats();
-  await loadRequests();
-}
-
-document.getElementById("refreshBtn").addEventListener("click", refreshAll);
-refreshAll();
