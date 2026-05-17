@@ -171,9 +171,32 @@ async function editRemark(id) {
 }
 
 async function deleteRequest(id) {
-  const confirmDelete = confirm("ยืนยันลบรายการนี้?");
+  const confirmDelete = confirm("ยืนยันลบรายการนี้และปิดสิทธิ์ผู้ใช้งาน?");
 
   if (!confirmDelete) return;
+
+  const { data: request, error: loadError } = await supabaseClient
+    .from("payment_requests")
+    .select("user_id")
+    .eq("id", id)
+    .single();
+
+  if (loadError) {
+    alert("โหลดข้อมูลรายการไม่สำเร็จ: " + loadError.message);
+    return;
+  }
+
+  if (request?.user_id) {
+    const { error: userError } = await supabaseClient
+      .from("users")
+      .delete()
+      .eq("id", request.user_id);
+
+    if (userError) {
+      alert("ลบ user ไม่สำเร็จ: " + userError.message);
+      return;
+    }
+  }
 
   const { error } = await supabaseClient
     .from("payment_requests")
