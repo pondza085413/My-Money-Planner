@@ -390,3 +390,5 @@ setupTabs();
 setupLiveInputs();
 setupSlip();
 calculateAll();
+calculateAll();
+setupLanguageToggle();
