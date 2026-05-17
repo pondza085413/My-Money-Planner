@@ -66,11 +66,24 @@ function baseCalc(){
 
 function updateTopSummary(){
   const { totalExpense, monthlyLeft, dailyQuota } = baseCalc();
+
   document.getElementById("netBalance").textContent = baht(monthlyLeft);
   document.getElementById("dailyQuotaTop").textContent = `โควต้าต่อวัน ${baht(dailyQuota)}`;
   document.getElementById("totalExpense").textContent = baht(totalExpense);
   document.getElementById("monthlyLeft").textContent = baht(monthlyLeft);
   document.getElementById("dailyQuota").textContent = baht(dailyQuota);
+
+  const dashboardLeftMoney = document.getElementById("dashboardLeftMoney");
+  const dashboardDaily = document.getElementById("dashboardDaily");
+  const dashboardUsage = document.getElementById("dashboardUsage");
+
+  if(dashboardLeftMoney) dashboardLeftMoney.textContent = baht(monthlyLeft);
+  if(dashboardDaily) dashboardDaily.textContent = baht(dailyQuota);
+
+  if(dashboardUsage){
+    const usageRate = state.salary > 0 ? (totalExpense / state.salary) * 100 : 0;
+    dashboardUsage.textContent = `${Math.min(usageRate, 999).toFixed(0)}%`;
+  }
 }
 
 function calculateDebt(){
@@ -83,6 +96,12 @@ function calculateDebt(){
   const { monthlyLeft } = baseCalc();
 
   let months = 0, balance = debt;
+
+  if(progressBar){
+    const percent = Math.min((pay / Math.max(debt, 1)) * 100, 100);
+    progressBar.style.width = `${percent}%`;
+  }
+
   if(pay <= debt * monthlyRate && annualRate > 0){
     document.getElementById("debtResult").innerHTML = `
       <span class="bad">ยอดจ่ายต่อเดือนยังไม่พอปิดดอกเบี้ย</span><br>
@@ -95,10 +114,7 @@ function calculateDebt(){
     balance = balance * (1 + monthlyRate) - pay;
     months++;
   }
-if(progressBar){ 
-    const percent = Math.min((pay / Math.max(debt, 1)) * 100, 100); 
-    progressBar.style.width = ${percent}%;
-  }
+
   const years = Math.floor(months / 12);
   const remainMonths = months % 12;
   const dailyForDebt = pay / daysInMonth();
@@ -207,6 +223,63 @@ function updateAdvice(){
   `).join("");
 }
 
+function generateAIAdvice(){
+  const { totalExpense, monthlyLeft, dailyQuota } = baseCalc();
+  const todaySpendValue = num("todaySpend");
+  const debtTotal = num("debtTotal");
+  const debtPay = num("debtPay");
+
+  const advice = [];
+
+  if(monthlyLeft < 0){
+    advice.push(`ตอนนี้รายจ่ายมากกว่ารายรับ ${baht(Math.abs(monthlyLeft))} ต่อเดือน ควรลดรายจ่ายประจำหรือรายจ่ายชีวิตประจำวันก่อน`);
+  }
+
+  if(state.dailyLife > 12000){
+    advice.push("ค่าใช้จ่ายชีวิตประจำวันของคุณค่อนข้างสูง ลองลดวันละ 100 บาท จะประหยัดได้ประมาณ 36,500 บาทต่อปี");
+  }
+
+  if(state.salary > 0){
+    const expenseRate = (totalExpense / state.salary) * 100;
+
+    if(expenseRate > 80){
+      advice.push("คุณใช้เงินเกิน 80% ของรายได้ ควรลดรายจ่ายที่ไม่จำเป็นก่อนเพิ่มเป้าหมายเก็บเงิน");
+    }
+
+    if(monthlyLeft > 10000){
+      advice.push("คุณมีศักยภาพเก็บเงินได้ดี ลองตั้งเป้ากองทุนฉุกเฉิน 6 เดือน เพื่อความปลอดภัยทางการเงิน");
+    }
+
+    if(expenseRate <= 60){
+      advice.push("สัดส่วนรายจ่ายของคุณค่อนข้างดี สามารถเพิ่มเป้าหมายเก็บเงินหรือเร่งจ่ายหนี้ได้");
+    }
+  }
+
+  if(todaySpendValue > dailyQuota){
+    advice.push(`วันนี้ใช้เกินโควต้า ${baht(todaySpendValue - dailyQuota)} ควรลดการใช้จ่ายวันถัดไปเพื่อไม่กระทบเป้าหมาย`);
+  }else if(todaySpendValue > 0){
+    advice.push(`วันนี้ยังอยู่ในโควต้า เหลืออีกประมาณ ${baht(dailyQuota - todaySpendValue)} สำหรับวันนี้`);
+  }
+
+  if(debtTotal > 0 && debtPay > 0){
+    const debtRatio = debtPay / Math.max(monthlyLeft, 1);
+    if(monthlyLeft > 0 && debtRatio > 0.7){
+      advice.push("ยอดจ่ายหนี้ต่อเดือนกินเงินเหลือค่อนข้างมาก ควรเผื่อเงินฉุกเฉินไว้ด้วย");
+    }
+  }
+
+  if(advice.length === 0){
+    advice.push("แผนการเงินตอนนี้อยู่ในเกณฑ์ดี ลองตั้งเป้าหมายเก็บเงินหรือปลดหนี้ให้ชัดเจนขึ้น");
+  }
+
+  const aiBox = document.getElementById("aiAdvice");
+  if(!aiBox) return;
+
+  aiBox.innerHTML = advice
+    .map(item => `<div class="ai-item">${item}</div>`)
+    .join("");
+}
+
 function calculateAll(){
   updateTopSummary();
   calculateDebt();
@@ -215,6 +288,7 @@ function calculateAll(){
   calculateSlip();
   calculateSurvive();
   updateAdvice();
+  generateAIAdvice();
 }
 
 function setupTabs(){
