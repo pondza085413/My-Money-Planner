@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Money Planner Pro</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/chart.js)"></script>
+</head>
+
+<body>
+  <h1>โปรแกรมวางแผนเงินเก็บ</h1>
+
+  <div class="box">
+    <label>รายได้ต่อเดือน: <span id="incomeText">30000</span> บาท</label>
+    <input type="range" id="income" min="10000" max="80000" value="30000">
+  </div>
+
+  <div class="box">
+    <label>ค่าใช้จ่ายจำเป็น: <span id="needText">10000</span> บาท</label>
+    <input type="range" id="need" min="1000" max="30000" value="10000">
+  </div>
+
+  <div class="box">
+    <label>ค่าใช้จ่ายอื่น ๆ: <span id="wantText">7000</span> บาท</label>
+    <input type="range" id="want" min="1000" max="30000" value="7000">
+  </div>
+
+  <div class="box">
+    <label>เก็บเงินเป้าหมาย: <span id="goalText">50000</span> บาท</label>
+    <input type="range" id="goal" min="10000" max="200000" value="50000">
+  </div>
+
+  <h2>สรุปผล</h2>
+  <p>เงินเก็บต่อเดือน: <strong id="saveMonth"></strong> บาท</p>
+  <p>เงินเก็บต่อปี: <strong id="saveYear"></strong> บาท</p>
+  <p>จะถึงเป้าภายใน: <strong id="reachGoal"></strong> เดือน</p>
+
+  <canvas id="chart" width="400" height="200"></canvas>
+
+  <script src="script.js"></script>
+</body>
+</html>
