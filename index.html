@@ -1,41 +1,123 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>Money Planner Pro</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/chart.js)"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Money Planner</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
-
 <body>
-  <h1>โปรแกรมวางแผนเงินเก็บ</h1>
+  <div class="app">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Personal Finance Planner</p>
+        <h1>วางแผนเงิน ใช้หนี้ เก็บเงิน และคุมงบรายวัน</h1>
+        <p class="hero-text">กรอกเงินเดือนและรายจ่าย แล้วระบบจะช่วยคำนวณเงินเหลือ โควต้ารายวัน เป้าหมายเก็บเงิน และแผนปลดหนี้</p>
+      </div>
+      <div class="hero-card">
+        <span>เงินเหลือหลังรายจ่าย</span>
+        <strong id="netBalance">฿0</strong>
+        <small id="dailyQuotaTop">โควต้าต่อวัน ฿0</small>
+      </div>
+    </header>
 
-  <div class="box">
-    <label>รายได้ต่อเดือน: <span id="incomeText">30000</span> บาท</label>
-    <input type="range" id="income" min="10000" max="80000" value="30000">
+    <main class="grid">
+      <section class="card setup-card">
+        <div class="card-title">
+          <div>
+            <h2>ข้อมูลรายเดือน</h2>
+            <p>ปรับสไลด์หรือพิมพ์ตัวเลขได้</p>
+          </div>
+          <button id="resetBtn" class="ghost-btn">รีเซ็ต</button>
+        </div>
+
+        <div id="monthlyInputs" class="input-stack"></div>
+
+        <div class="summary-row">
+          <div>
+            <span>รายจ่ายรวม</span>
+            <b id="totalExpense">฿0</b>
+          </div>
+          <div>
+            <span>เงินเหลือ/เดือน</span>
+            <b id="monthlyLeft">฿0</b>
+          </div>
+          <div>
+            <span>ใช้ได้/วัน</span>
+            <b id="dailyQuota">฿0</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>เลือกฟีเจอร์</h2>
+        <div class="tabs">
+          <button class="tab active" data-tab="debt">จ่ายหนี้</button>
+          <button class="tab" data-tab="saving">ตั้งเป้าเก็บเงิน</button>
+          <button class="tab" data-tab="spending">ใช้เงินเท่านี้</button>
+          <button class="tab" data-tab="slip">อัปโหลดสลิป</button>
+          <button class="tab" data-tab="survive">อยู่รอดกี่เดือน</button>
+        </div>
+
+        <section id="debt" class="panel active">
+          <h3>แผนจ่ายหนี้</h3>
+          <div class="form-grid">
+            <label>ยอดหนี้ทั้งหมด <input type="number" id="debtTotal" value="100000"></label>
+            <label>ดอกเบี้ยต่อปี (%) <input type="number" id="debtRate" value="12"></label>
+            <label>จ่ายเดือนละ <input type="number" id="debtPay" value="5000"></label>
+            <label>อยากจบภายในกี่ปี <input type="number" id="debtTargetYears" value="2"></label>
+          </div>
+          <div class="result-box" id="debtResult"></div>
+        </section>
+
+        <section id="saving" class="panel">
+          <h3>เป้าหมายเก็บเงิน</h3>
+          <div class="form-grid">
+            <label>อยากเก็บเดือนละ <input type="number" id="saveMonthly" value="5000"></label>
+            <label>หรืออยากเก็บปีละ <input type="number" id="saveYearly" value="60000"></label>
+          </div>
+          <div class="result-box" id="savingResult"></div>
+        </section>
+
+        <section id="spending" class="panel">
+          <h3>ใช้เงินเท่านี้ จะเหลือเท่าไหร่</h3>
+          <div class="form-grid">
+            <label>วันนี้ใช้ไป <input type="number" id="todaySpend" value="300"></label>
+          </div>
+          <div class="result-box" id="spendingResult"></div>
+        </section>
+
+        <section id="slip" class="panel">
+          <h3>อัปโหลดรูปสลิป</h3>
+          <p class="hint">ระบบจะพยายามอ่านข้อความในรูป แล้วดึงตัวเลขยอดโอนที่น่าจะเป็นยอดใช้จ่าย</p>
+          <input type="file" id="slipInput" accept="image/*">
+          <button id="scanSlipBtn" class="primary-btn">อ่านสลิป</button>
+          <div class="preview-wrap"><img id="slipPreview" alt=""></div>
+          <textarea id="ocrText" placeholder="ข้อความจากสลิปจะขึ้นตรงนี้ หรือพิมพ์แก้เองได้"></textarea>
+          <div class="form-grid">
+            <label>ยอดที่ใช้วันนี้จากสลิป <input type="number" id="slipAmount" value="0"></label>
+          </div>
+          <div class="result-box" id="slipResult"></div>
+        </section>
+
+        <section id="survive" class="panel">
+          <h3>อยู่รอดในกี่เดือน</h3>
+          <div class="form-grid">
+            <label>เงินสดที่มีตอนนี้ <input type="number" id="cashNow" value="30000"></label>
+            <label>ต้องการให้อยู่รอดกี่เดือน <input type="number" id="surviveMonths" value="3"></label>
+            <label>วันนี้ใช้ไป <input type="number" id="surviveSpendToday" value="250"></label>
+          </div>
+          <div class="result-box" id="surviveResult"></div>
+        </section>
+      </section>
+    </main>
+
+    <section class="card tips">
+      <h2>คำแนะนำวันนี้</h2>
+      <div id="adviceList" class="advice-list"></div>
+    </section>
   </div>
-
-  <div class="box">
-    <label>ค่าใช้จ่ายจำเป็น: <span id="needText">10000</span> บาท</label>
-    <input type="range" id="need" min="1000" max="30000" value="10000">
-  </div>
-
-  <div class="box">
-    <label>ค่าใช้จ่ายอื่น ๆ: <span id="wantText">7000</span> บาท</label>
-    <input type="range" id="want" min="1000" max="30000" value="7000">
-  </div>
-
-  <div class="box">
-    <label>เก็บเงินเป้าหมาย: <span id="goalText">50000</span> บาท</label>
-    <input type="range" id="goal" min="10000" max="200000" value="50000">
-  </div>
-
-  <h2>สรุปผล</h2>
-  <p>เงินเก็บต่อเดือน: <strong id="saveMonth"></strong> บาท</p>
-  <p>เงินเก็บต่อปี: <strong id="saveYear"></strong> บาท</p>
-  <p>จะถึงเป้าภายใน: <strong id="reachGoal"></strong> เดือน</p>
-
-  <canvas id="chart" width="400" height="200"></canvas>
 
   <script src="script.js"></script>
 </body>
