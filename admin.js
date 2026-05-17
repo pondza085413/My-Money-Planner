@@ -89,7 +89,9 @@ async function loadRequests() {
             <button class="secondary-btn" onclick="editRemark('${item.id}')">
               ใส่ Remark
             </button>
-
+            <button class="danger-btn" onclick="deleteRequest('${item.id}')">
+               ลบ
+              </button>
             ${
               item.status === "pending"
                 ? `
