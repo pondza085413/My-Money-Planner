@@ -75,6 +75,7 @@ function updateTopSummary(){
 
 function calculateDebt(){
   const debt = num("debtTotal");
+  const progressBar = document.getElementById("debtProgressBar");
   const annualRate = num("debtRate") / 100;
   const monthlyRate = annualRate / 12;
   const pay = num("debtPay");
@@ -94,7 +95,10 @@ function calculateDebt(){
     balance = balance * (1 + monthlyRate) - pay;
     months++;
   }
-
+if(progressBar){ 
+    const percent = Math.min((pay / Math.max(debt, 1)) * 100, 100); 
+    progressBar.style.width = ${percent}%;
+  }
   const years = Math.floor(months / 12);
   const remainMonths = months % 12;
   const dailyForDebt = pay / daysInMonth();
