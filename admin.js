@@ -1,3 +1,11 @@
+const adminPassword = "Pp666..";
+
+const input = prompt("กรอกรหัสแอดมิน");
+
+if(input !== adminPassword){
+  alert("ไม่มีสิทธิ์เข้าใช้งาน");
+  window.location.href = "payment.html";
+}
 const list = document.getElementById("requestsList");
 
 async function loadStats(){
