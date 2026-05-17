@@ -39,76 +39,56 @@ async function loadStats(){
   document.getElementById("approvedCount").textContent = approved || 0;
 }
 
-async function loadRequests() {
+async function loadRequests(){
   list.innerHTML = "กำลังโหลด...";
 
   const { data, error } = await supabaseClient
-  .from("payment_requests")
-  .select("*")
-  .order("created_at", { ascending: false });
+    .from("payment_requests")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-  if (error) {
-    list.innerHTML = `<div class="status-box error">โหลดข้อมูลไม่สำเร็จ: ${escapeText(error.message)}</div>`;
+  console.log("payment_requests data:", data);
+  console.log("payment_requests error:", error);
+
+  if(error){
+    list.innerHTML = `<div class="status-box error">โหลดข้อมูลไม่สำเร็จ: ${error.message}</div>`;
     return;
   }
 
-  if (!data.length) {
+  if(!data || data.length === 0){
     list.innerHTML = `<div class="empty">ยังไม่มีรายการชำระเงิน</div>`;
     return;
   }
 
-  list.innerHTML = data
-    .map((item) => {
-      const remark = escapeText(item.remark || "");
-      const customerName = escapeText(item.customer_name || "-");
-      const lineId = escapeText(item.line_id || "-");
-      const status = escapeText(item.status || "-");
-      const amount = Number(item.amount || 0).toLocaleString("th-TH");
-      const createdAt = item.created_at
-        ? new Date(item.created_at).toLocaleString("th-TH")
-        : "";
+  list.innerHTML = data.map(item => `
+    <article class="request-card">
+      <div>
+        <h3>${item.customer_name || "-"}</h3>
+        <p>LINE ID: <b>${item.line_id || "-"}</b></p>
+        <p>ยอด: <b>${Number(item.amount || 0).toLocaleString("th-TH")} บาท</b></p>
+        <p>สถานะ: <span class="pill ${item.status}">${item.status || "-"}</span></p>
+        <p>Remark: <b>${item.remark || "-"}</b></p>
+        <p class="small">${item.created_at ? new Date(item.created_at).toLocaleString("th-TH") : ""}</p>
+      </div>
 
-      return `
-        <article class="request-card">
-          <div>
-            <h3>${customerName}</h3>
-            <p>LINE ID: <b>${lineId}</b></p>
-            <p>ยอด: <b>${amount} บาท</b></p>
-            <p>สถานะ: <span class="pill ${status}">${status}</span></p>
-            <p>Remark: <b>${remark || "-"}</b></p>
-            <p class="small">${createdAt}</p>
-          </div>
+      <div class="admin-actions">
+        ${item.slip_url ? `<a class="secondary-btn" href="${item.slip_url}" target="_blank">ดูสลิป</a>` : ""}
 
-          <div class="admin-actions">
-            ${
-              item.slip_url
-                ? `<a class="secondary-btn" href="${item.slip_url}" target="_blank">ดูสลิป</a>`
-                : ""
-            }
+        <button class="secondary-btn" onclick="editRemark('${item.id}')">
+          ใส่ Remark
+        </button>
 
-            <button class="secondary-btn" onclick="editRemark('${item.id}')">
-              ใส่ Remark
-            </button>
-            <button class="danger-btn" onclick="deleteRequest('${item.id}')">
-               ลบ
-              </button>
-           ${item.status === "pending" ? `
-  <button class="primary-btn" onclick="approvePayment('${item.id}')">อนุมัติ</button>
-  <button class="danger-btn" onclick="rejectPayment('${item.id}')">ไม่อนุมัติ</button>
-` : ""}
+        ${item.status === "pending" ? `
+          <button class="primary-btn" onclick="approvePayment('${item.id}')">อนุมัติ</button>
+          <button class="danger-btn" onclick="rejectPayment('${item.id}')">ไม่อนุมัติ</button>
+        ` : ""}
 
-            ${
-              item.status === "approved"
-                ? `
-                  <button class="danger-btn" onclick="deleteRequest('${item.id}')">ลบรายการ</button>
-                `
-                : ""
-            }
-          </div>
-        </article>
-      `;
-    })
-    .join("");
+        ${item.status === "approved" ? `
+          <button class="danger-btn" onclick="deleteRequest('${item.id}')">ปิดสิทธิ์</button>
+        ` : ""}
+      </div>
+    </article>
+  `).join("");
 }
 
 async function approvePayment(id) {
